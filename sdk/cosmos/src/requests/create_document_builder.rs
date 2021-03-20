@@ -131,7 +131,7 @@ impl<'a, 'b, 'c> CreateDocumentBuilder<'a, 'b> {
         .await
     }
 
-    pub async fn execute<PK: Serialize + 'c, T: Serialize + CosmosEntity<'c, PK>>(
+    pub async fn execute<T: Serialize + CosmosEntity<'c>>(
         &self,
         document: &'c T,
     ) -> Result<CreateDocumentResponse, CosmosError> {
