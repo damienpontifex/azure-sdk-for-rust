@@ -14,9 +14,7 @@ pub trait CosmosEntity<'a> {
 /// This function serializes the partition key in the format CosmosDB expects. It's a single line
 /// but since it must be wrapped in an array (and it could change) we create a function to avoid
 /// having to replicate this logic in the rest of the code.
-pub(crate) fn serialize_partition_key_to_string<PK: Serialize>(
-    pk: &PK,
-) -> Result<String, serde_json::Error> {
+pub(crate) fn serialize_partition_key<PK: Serialize>(pk: &PK) -> Result<String, serde_json::Error> {
     // this must be serialized as an array even tough CosmosDB supports only a sigle
     // partition key.
     serde_json::to_string(&[pk])
@@ -32,7 +30,7 @@ pub(crate) fn add_as_partition_key_header<'a, P: CosmosEntity<'a>>(
 ) -> Result<Builder, serde_json::Error> {
     Ok(builder.header(
         headers::HEADER_DOCUMENTDB_PARTITIONKEY,
-        &serialize_partition_key_to_string(&pk.partition_key())?,
+        &serialize_partition_key(&pk.partition_key())?,
     ))
 }
 

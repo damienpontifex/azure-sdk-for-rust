@@ -1,6 +1,5 @@
 use crate::cosmos_entity::{
-    add_as_partition_key_header, add_as_partition_key_header_serialized,
-    serialize_partition_key_to_string,
+    add_as_partition_key_header, add_as_partition_key_header_serialized, serialize_partition_key,
 };
 use crate::prelude::*;
 use crate::resources::ResourceType;
@@ -124,7 +123,7 @@ impl<'a, 'b, 'c> CreateDocumentBuilder<'a, 'b> {
     ) -> Result<CreateDocumentResponse, CosmosError> {
         self.execute_internal(document, |req| {
             Ok(add_as_partition_key_header_serialized(
-                &serialize_partition_key_to_string(partition_key)?,
+                &serialize_partition_key(partition_key)?,
                 req,
             ))
         })
