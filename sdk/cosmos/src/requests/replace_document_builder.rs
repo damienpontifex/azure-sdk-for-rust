@@ -48,7 +48,7 @@ impl<'a, 'b> ReplaceDocumentBuilder<'a, 'b> {
         indexing_directive: IndexingDirective,
     }
 
-    pub async fn execute_internal<T, FNPK>(
+    pub async fn perform_execute<T, FNPK>(
         &self,
         document: &T,
         fn_add_primary_key: FNPK,
@@ -97,7 +97,7 @@ impl<'a, 'b> ReplaceDocumentBuilder<'a, 'b> {
     where
         T: Serialize,
     {
-        self.execute_internal(document, |req| {
+        self.perform_execute(document, |req| {
             Ok(add_as_partition_key_header_serialized(
                 self.document_client.partition_key_serialized(),
                 req,
@@ -111,7 +111,7 @@ impl<'a, 'b> ReplaceDocumentBuilder<'a, 'b> {
         document: &DOC,
         partition_key: &PK,
     ) -> Result<ReplaceDocumentResponse, CosmosError> {
-        self.execute_internal(document, |req| {
+        self.perform_execute(document, |req| {
             Ok(add_as_partition_key_header_serialized(
                 &serialize_partition_key(partition_key)?,
                 req,

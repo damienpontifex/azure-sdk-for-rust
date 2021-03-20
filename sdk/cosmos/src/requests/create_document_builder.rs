@@ -54,7 +54,7 @@ impl<'a, 'b> CreateDocumentBuilder<'a, 'b> {
 }
 
 impl<'a, 'b, 'c> CreateDocumentBuilder<'a, 'b> {
-    async fn execute_internal<DOC, FNPK>(
+    async fn perform_execute<DOC, FNPK>(
         &self,
         document: &'c DOC,
         fn_add_primary_key: FNPK,
@@ -121,7 +121,7 @@ impl<'a, 'b, 'c> CreateDocumentBuilder<'a, 'b> {
         document: &'c DOC,
         partition_key: &PK,
     ) -> Result<CreateDocumentResponse, CosmosError> {
-        self.execute_internal(document, |req| {
+        self.perform_execute(document, |req| {
             Ok(add_as_partition_key_header_serialized(
                 &serialize_partition_key(partition_key)?,
                 req,
@@ -134,7 +134,7 @@ impl<'a, 'b, 'c> CreateDocumentBuilder<'a, 'b> {
         &self,
         document: &'c T,
     ) -> Result<CreateDocumentResponse, CosmosError> {
-        self.execute_internal(document, |req| {
+        self.perform_execute(document, |req| {
             Ok(add_as_partition_key_header(document, req)?)
         })
         .await

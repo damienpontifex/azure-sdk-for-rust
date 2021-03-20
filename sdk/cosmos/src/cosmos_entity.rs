@@ -11,9 +11,7 @@ pub trait CosmosEntity<'a> {
     fn partition_key(&'a self) -> Self::Entity;
 }
 
-/// This function serializes the partition key in the format CosmosDB expects. It's a single line
-/// but since it must be wrapped in an array (and it could change) we create a function to avoid
-/// having to replicate this logic in the rest of the code.
+/// Serialize the partition key in the format CosmosDB expects.
 pub(crate) fn serialize_partition_key<PK: Serialize>(pk: &PK) -> Result<String, serde_json::Error> {
     // this must be serialized as an array even tough CosmosDB supports only a sigle
     // partition key.
